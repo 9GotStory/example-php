@@ -18,31 +18,23 @@
           <div class="card rounded-0 mt-5">
             <div class="card-header bg-white">
               <h1 class="text-center">
-                Registration Form
+                Login Form
               </h1>
             </div>
             <?php
             if (isset($_POST['submit'])) {
 
               // declare param
-              $fullname = $_POST['fullname'];
               $email = $_POST['email'];
               $password = $_POST['password'];
-              $confirmPassword = $_POST['confirmPassword'];
 
               // validate input
               $errors = array();
-              if (empty($fullname) || empty($email) || empty($password) || empty($confirmPassword)) {
-                array_push($errors, "Please input all fields");
-              }
               if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
                 array_push($errors, "Invalid email format");
               }
               if (strlen($password) < 6) {
-                array_push($errors, "Password must be at least 6 characters long");
-              }
-              if ($password != $confirmPassword) {
-                array_push($errors, "Password not match");
+                array_push($errors, "Password must be at least 6 characters");
               }
 
               // check errors
@@ -53,24 +45,24 @@
               } else {
                 require_once 'db.php';
 
-                // insert data
-                $sql = "INSERT INTO users (fullname, email, password) VALUES (?,?,?)";
+                $sql = "SELECT * FROM users WHERE email = ?";
                 $stmt = $pdo->prepare($sql);
-                // hash password
-                $passwordHashed = password_hash($password, PASSWORD_DEFAULT);
+                $stmt->execute([$email]);
+                $data = $stmt->fetch();
 
-                if ($stmt->execute([$fullname, $email, $passwordHashed])) {
-                  echo '<div class="alert alert-success">Register success</div>';
-                  // header("Location: index.php");
+                if ($data && password_verify($password, $data['password'])) {
+                  $_SESSION['user_id'] = $data['user_id'];
+                  $_SESSION['username'] = $data['fullname'];
+
+                  header("Location: profile.php");
+                  exit();
+                } else {
+                  echo '<div class="alert alert-danger">Invalid email or password</div>';
                 }
               }
             }
             ?>
             <div class="card-body">
-              <div class="mt-3">
-                <label for="fullname" class="form-label">Fullname</label>
-                <input type="text" name="fullname" placeholder="name" class="form-control" value="<?= isset($_POST['fullname']) ? $_POST['fullname'] : '' ?>">
-              </div>
               <div class="mt-3">
                 <label for="email" class="form-label">Email</label>
                 <input type="text" name="email" placeholder="email" class="form-control" value="<?= isset($_POST['email']) ? $_POST['email'] : '' ?>">
@@ -79,13 +71,9 @@
                 <label for="password" class="form-label">Password</label>
                 <input type="password" name="password" placeholder="password" class="form-control">
               </div>
-              <div class="mt-3">
-                <label for="confirmPassword" class="form-label">Confirm Password</label>
-                <input type="password" name="confirmPassword" placeholder="Confirm password" class="form-control">
-              </div>
             </div>
             <div class="card-footer bg-white border-0">
-              <input type="submit" name="submit" value="Register" class="btn btn-sm btn-primary">
+              <input type="submit" name="submit" value="Login" class="btn btn-sm btn-primary">
             </div>
           </div>
 
