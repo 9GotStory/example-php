@@ -90,6 +90,8 @@
           </div>
 
         </form>
+
+        <a href="login.php" class="btn btn-sm btn-secondary mt-3">Login</a>
       </div>
     </div>
   </div>

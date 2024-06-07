@@ -78,6 +78,8 @@
           </div>
 
         </form>
+
+        <a href="index.php" class="btn btn-sm btn-secondary mt-3">Register</a>
       </div>
     </div>
   </div>
