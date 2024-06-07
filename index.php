@@ -61,7 +61,7 @@
 
                 if ($stmt->execute([$fullname, $email, $passwordHashed])) {
                   echo '<div class="alert alert-success">Register success</div>';
-                  // header("Location: index.php");
+                  header("Location: login.php");
                 }
               }
             }
