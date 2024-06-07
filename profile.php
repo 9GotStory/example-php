@@ -2,15 +2,14 @@
 
 require_once 'db.php';
 
-if (isset($_SESSION['user_id'])) {
+if (!isset($_SESSION['user_id'])) {
 
-  $user_id = $_SESSION['user_id'];
-
-  $sql = "SELECT * FROM users WHERE user_id = ?";
-  $stmt = $pdo->prepare($sql);
-  $stmt->execute([$user_id]);
-  $user = $stmt->fetch();
+  // $sql = "SELECT * FROM users WHERE user_id = ?";
+  // $stmt = $pdo->prepare($sql);
+  // $stmt->execute([$user_id]);
+  // $user = $stmt->fetch();
 }
+$user = ["fullname" => "admin"];
 
 if (!$_SESSION['user_id']) {
   header("Location: index.php");

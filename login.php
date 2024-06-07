@@ -24,6 +24,8 @@
             <?php
             if (isset($_POST['submit'])) {
 
+              require_once 'db.php';
+
               // declare param
               $email = $_POST['email'];
               $password = $_POST['password'];
@@ -43,16 +45,24 @@
                   echo '<div class="alert alert-danger">' . $error . '</div>';
                 }
               } else {
-                require_once 'db.php';
 
-                $sql = "SELECT * FROM users WHERE email = ?";
-                $stmt = $pdo->prepare($sql);
-                $stmt->execute([$email]);
-                $data = $stmt->fetch();
 
-                if ($data && password_verify($password, $data['password'])) {
-                  $_SESSION['user_id'] = $data['user_id'];
-                  $_SESSION['username'] = $data['fullname'];
+                // $sql = "SELECT * FROM users WHERE email = ?";
+                // $stmt = $pdo->prepare($sql);
+                // $stmt->execute([$email]);
+                // $data = $stmt->fetch();
+
+                // if ($data && password_verify($password, $data['password'])) {
+                //   $_SESSION['user_id'] = $data['user_id'];
+                //   $_SESSION['username'] = $data['fullname'];
+
+                $input_email = 'admin@admin.com';
+                $input_password = 'password';
+
+                if ($email === $input_email && $password === $input_password) {
+
+                  $_SESSION['user_id'] = 1;
+                  $_SESSION['fullname'] = 'admin';
 
                   header("Location: profile.php");
                   exit();
@@ -65,7 +75,7 @@
             <div class="card-body">
               <div class="mt-3">
                 <label for="email" class="form-label">Email</label>
-                <input type="text" name="email" placeholder="email" class="form-control" value="<?= isset($_POST['email']) ? $_POST['email'] : '' ?>">
+                <input type="text" name="email" placeholder="admin@admin.com" class="form-control" value="<?= isset($_POST['email']) ? $_POST['email'] : '' ?>">
               </div>
               <div class="mt-3">
                 <label for="password" class="form-label">Password</label>
